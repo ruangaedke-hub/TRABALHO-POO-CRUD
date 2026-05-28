@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo != null ? titulo + ' | Biblioteca' : 'Sistema Biblioteca'}">Sistema Biblioteca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">📚</span>
+        <a th:href="@{/}" class="nav-title">Biblioteca</a>
+    </div>
+    <ul class="nav-links">
+        <li><a th:href="@{/}" th:classappend="${#httpServletRequest.requestURI == '/' ? 'active' : ''}">Início</a></li>
+        <li><a th:href="@{/livros}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/livros') ? 'active' : ''}">Livros</a></li>
+        <li><a th:href="@{/autores}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/autores') ? 'active' : ''}">Autores</a></li>
+        <li><a th:href="@{/categorias}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/categorias') ? 'active' : ''}">Categorias</a></li>
+        <li><a th:href="@{/relatorio}" th:classappend="${#strings.startsWith(#httpServletRequest.requestURI, '/relatorio') ? 'active' : ''}">📊 Relatórios</a></li>
+    </ul>
+</nav>
+
+<main class="main-content">
+    <!-- Alertas -->
+    <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <!-- Conteúdo da página -->
+    <div th:replace="${content}">Conteúdo aqui</div>
+</main>
+
+<footer class="footer">
+    <p>&copy; 2024 Sistema de Biblioteca &mdash; Spring Boot + Thymeleaf</p>
+</footer>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relatórios | Biblioteca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">📚</span>
+        <a th:href="@{/}" class="nav-title">Biblioteca</a>
+    </div>
+    <ul class="nav-links">
+        <li><a th:href="@{/}">Início</a></li>
+        <li><a th:href="@{/livros}">Livros</a></li>
+        <li><a th:href="@{/autores}">Autores</a></li>
+        <li><a th:href="@{/categorias}">Categorias</a></li>
+        <li><a th:href="@{/relatorio}" class="active">📊 Relatórios</a></li>
+    </ul>
+</nav>
+<main class="main-content">
+    <div class="page-header">
+        <h1>📊 Dashboard de Relatórios</h1>
+        <span class="badge" th:text="${totalLivros} + ' livros no acervo'"></span>
+    </div>
+
+    <div class="charts-grid">
+        <!-- Gráfico de Pizza - Por Categoria -->
+        <div class="chart-card chart-card-lg">
+            <h2>Livros por Categoria</h2>
+            <p class="chart-desc">Distribuição do acervo por categoria</p>
+            <div class="chart-wrapper">
+                <canvas id="categoriaChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico de Barras - Por Autor -->
+        <div class="chart-card chart-card-lg">
+            <h2>Livros por Autor</h2>
+            <p class="chart-desc">Quantidade de obras por autor cadastrado</p>
+            <div class="chart-wrapper">
+                <canvas id="autorChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Gráfico de Linha - Por Ano -->
+        <div class="chart-card chart-full">
+            <h2>Publicações por Ano</h2>
+            <p class="chart-desc">Linha temporal de publicações no acervo</p>
+            <div class="chart-wrapper chart-wrapper-wide">
+                <canvas id="anoChart"></canvas>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="footer"><p>&copy; 2024 Sistema de Biblioteca</p></footer>
+
+<script th:inline="javascript">
+    const labelsCategoria = /*[[${labelsCategoria}]]*/ [];
+    const valoresCategoria = /*[[${valoresCategoria}]]*/ [];
+    const labelsAutor = /*[[${labelsAutor}]]*/ [];
+    const valoresAutor = /*[[${valoresAutor}]]*/ [];
+    const labelsAno = /*[[${labelsAno}]]*/ [];
+    const valoresAno = /*[[${valoresAno}]]*/ [];
+
+    const colors = [
+        '#8B6914', '#C4956A', '#2C4A3E', '#5B8C5A',
+        '#704264', '#C17767', '#3D5A80', '#98C1D9'
+    ];
+
+    // Gráfico de Pizza - Categorias
+    new Chart(document.getElementById('categoriaChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labelsCategoria,
+            datasets: [{
+                data: valoresCategoria,
+                backgroundColor: colors,
+                borderColor: '#FAF7F0',
+                borderWidth: 3
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { font: { family: 'Source Sans 3', size: 13 }, padding: 16 }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Barras - Autores
+    new Chart(document.getElementById('autorChart'), {
+        type: 'bar',
+        data: {
+            labels: labelsAutor,
+            datasets: [{
+                label: 'Livros',
+                data: valoresAutor,
+                backgroundColor: colors,
+                borderRadius: 6,
+                borderSkipped: false
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, font: { family: 'Source Sans 3' } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    ticks: { font: { family: 'Source Sans 3', size: 12 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+
+    // Gráfico de Linha - Anos
+    new Chart(document.getElementById('anoChart'), {
+        type: 'line',
+        data: {
+            labels: labelsAno,
+            datasets: [{
+                label: 'Publicações',
+                data: valoresAno,
+                borderColor: '#8B6914',
+                backgroundColor: 'rgba(139, 105, 20, 0.1)',
+                borderWidth: 2.5,
+                pointBackgroundColor: '#8B6914',
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                tension: 0.3,
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: { stepSize: 1, font: { family: 'Source Sans 3' } },
+                    grid: { color: 'rgba(0,0,0,0.05)' }
+                },
+                x: {
+                    ticks: { font: { family: 'Source Sans 3', size: 12 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

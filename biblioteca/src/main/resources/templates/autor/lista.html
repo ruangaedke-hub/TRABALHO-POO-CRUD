@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autores | Biblioteca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">📚</span>
+        <a th:href="@{/}" class="nav-title">Biblioteca</a>
+    </div>
+    <ul class="nav-links">
+        <li><a th:href="@{/}">Início</a></li>
+        <li><a th:href="@{/livros}">Livros</a></li>
+        <li><a th:href="@{/autores}" class="active">Autores</a></li>
+        <li><a th:href="@{/categorias}">Categorias</a></li>
+        <li><a th:href="@{/relatorio}">📊 Relatórios</a></li>
+    </ul>
+</nav>
+<main class="main-content">
+    <div th:if="${sucesso}" class="alert alert-success" th:text="${sucesso}"></div>
+    <div th:if="${erro}" class="alert alert-danger" th:text="${erro}"></div>
+
+    <div class="page-header">
+        <h1>✍️ Autores</h1>
+        <a th:href="@{/autores/novo}" class="btn btn-primary">+ Novo Autor</a>
+    </div>
+
+    <div class="search-bar">
+        <form th:action="@{/autores}" method="get">
+            <input type="text" name="busca" placeholder="Buscar por nome..." th:value="${busca}" class="search-input">
+            <button type="submit" class="btn btn-outline">Buscar</button>
+            <a th:href="@{/autores}" class="btn btn-ghost" th:if="${busca != null}">Limpar</a>
+        </form>
+    </div>
+
+    <div class="table-container">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Nacionalidade</th>
+                    <th>Livros</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${autores.isEmpty()}">
+                    <td colspan="5" class="empty-state">Nenhum autor cadastrado ainda.</td>
+                </tr>
+                <tr th:each="autor : ${autores}">
+                    <td th:text="${autor.id}"></td>
+                    <td><strong th:text="${autor.nome}"></strong></td>
+                    <td th:text="${autor.nacionalidade != null ? autor.nacionalidade : '-'}"></td>
+                    <td><span class="badge" th:text="${autor.quantidadeLivros}"></span></td>
+                    <td class="actions-cell">
+                        <a th:href="@{'/autores/editar/' + ${autor.id}}" class="btn-sm btn-edit">Editar</a>
+                        <a th:href="@{'/autores/deletar/' + ${autor.id}}"
+                           class="btn-sm btn-delete"
+                           onclick="return confirm('Tem certeza que deseja deletar este autor?')">Deletar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</main>
+<footer class="footer"><p>&copy; 2024 Sistema de Biblioteca</p></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

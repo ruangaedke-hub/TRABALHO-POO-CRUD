@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livro | Biblioteca</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-brand">
+        <span class="nav-icon">📚</span>
+        <a th:href="@{/}" class="nav-title">Biblioteca</a>
+    </div>
+    <ul class="nav-links">
+        <li><a th:href="@{/}">Início</a></li>
+        <li><a th:href="@{/livros}" class="active">Livros</a></li>
+        <li><a th:href="@{/autores}">Autores</a></li>
+        <li><a th:href="@{/categorias}">Categorias</a></li>
+        <li><a th:href="@{/relatorio}">📊 Relatórios</a></li>
+    </ul>
+</nav>
+<main class="main-content">
+    <div class="page-header">
+        <h1 th:text="${livro.id != null ? '✏️ Editar Livro' : '📖 Novo Livro'}">Livro</h1>
+        <a th:href="@{/livros}" class="btn btn-outline">← Voltar</a>
+    </div>
+
+    <div class="form-container">
+        <form th:action="@{/livros/salvar}" th:object="${livro}" method="post">
+            <input type="hidden" th:field="*{id}">
+
+            <div class="form-row">
+                <div class="form-group form-group-lg">
+                    <label for="titulo">Título *</label>
+                    <input type="text" id="titulo" th:field="*{titulo}" class="form-control"
+                           th:classappend="${#fields.hasErrors('titulo')} ? 'is-invalid' : ''"
+                           placeholder="Título do livro">
+                    <span class="error-msg" th:if="${#fields.hasErrors('titulo')}" th:errors="*{titulo}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="isbn">ISBN *</label>
+                    <input type="text" id="isbn" th:field="*{isbn}" class="form-control"
+                           th:classappend="${#fields.hasErrors('isbn')} ? 'is-invalid' : ''"
+                           placeholder="978-xx-xxx-xxxx-x">
+                    <span class="error-msg" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="autorId">Autor *</label>
+                    <select id="autorId" name="autorId" class="form-control">
+                        <option value="">Selecione um autor...</option>
+                        <option th:each="autor : ${autores}"
+                                th:value="${autor.id}"
+                                th:text="${autor.nome}"
+                                th:selected="${autorIdSelecionado != null and autorIdSelecionado == autor.id}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoriaId">Categoria *</label>
+                    <select id="categoriaId" name="categoriaId" class="form-control">
+                        <option value="">Selecione uma categoria...</option>
+                        <option th:each="cat : ${categorias}"
+                                th:value="${cat.id}"
+                                th:text="${cat.nome}"
+                                th:selected="${categoriaIdSelecionada != null and categoriaIdSelecionada == cat.id}">
+                        </option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="anoPublicacao">Ano de Publicação *</label>
+                    <input type="number" id="anoPublicacao" th:field="*{anoPublicacao}" class="form-control"
+                           th:classappend="${#fields.hasErrors('anoPublicacao')} ? 'is-invalid' : ''"
+                           placeholder="Ex: 2024" min="1000" max="2100">
+                    <span class="error-msg" th:if="${#fields.hasErrors('anoPublicacao')}" th:errors="*{anoPublicacao}"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="numeroPaginas">Número de Páginas</label>
+                    <input type="number" id="numeroPaginas" th:field="*{numeroPaginas}" class="form-control"
+                           placeholder="Ex: 320" min="1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="sinopse">Sinopse</label>
+                <textarea id="sinopse" th:field="*{sinopse}" class="form-control" rows="4"
+                          placeholder="Resumo do livro..."></textarea>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">💾 Salvar</button>
+                <a th:href="@{/livros}" class="btn btn-ghost">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</main>
+<footer class="footer"><p>&copy; 2024 Sistema de Biblioteca</p></footer>
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>
